@@ -1,5 +1,6 @@
 package com.kyleguo.springbootmall.rowmapper;
 
+import com.kyleguo.springbootmall.constant.ProductCategory;
 import com.kyleguo.springbootmall.model.Product;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -12,7 +13,19 @@ public class ProductRowMapper implements RowMapper<Product> {
         Product product = new Product();
         product.setProductId(rs.getInt("product_id"));
         product.setProductName(rs.getString("product_name"));
-        product.setCategory(rs.getString("category"));
+
+//        // 從DB撈出category字串
+//        String categoryStr = rs.getString("category");
+//        // 由字串內容透過valueOf轉Enum類型
+//        ProductCategory category = ProductCategory.valueOf(categoryStr);
+//        // 設定到enum變數上
+//        product.setCategory(category);
+
+        // 寫一行取代上三行
+        product.setCategory(ProductCategory.valueOf(rs.getString("category")));
+
+
+
         product.setImageUrl(rs.getString("image_url"));
         product.setPrice(rs.getInt("price"));
         product.setStock(rs.getInt("stock"));

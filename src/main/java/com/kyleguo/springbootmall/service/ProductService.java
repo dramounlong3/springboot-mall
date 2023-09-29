@@ -1,5 +1,6 @@
 package com.kyleguo.springbootmall.service;
 
+import com.kyleguo.springbootmall.constant.ProductCategory;
 import com.kyleguo.springbootmall.dto.ProductRequest;
 import com.kyleguo.springbootmall.model.Product;
 
@@ -11,5 +12,5 @@ public interface ProductService {
     void updateProduct(Integer productId, ProductRequest productRequest);
     void deleteProductById(Integer productId);
 
-    List<Product> getProducts();
+    List<Product> getProducts(ProductCategory category, String search);
 }

@@ -1,5 +1,6 @@
 package com.kyleguo.springbootmall.controller;
 
+import com.kyleguo.springbootmall.constant.ProductCategory;
 import com.kyleguo.springbootmall.dto.ProductRequest;
 import com.kyleguo.springbootmall.model.Product;
 import com.kyleguo.springbootmall.service.ProductService;
@@ -19,8 +20,9 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public  ResponseEntity<List<Product>> getProducts() {
-        List<Product> productList = productService.getProducts();
+    public  ResponseEntity<List<Product>> getProducts(@RequestParam(required = false) ProductCategory category,
+                                                      @RequestParam(required = false) String search) {
+        List<Product> productList = productService.getProducts(category, search);
 
         // productList是空的也沒關係, 因為restful url資源定義的關係, 無須確認內容是否為空
         return ResponseEntity.status(HttpStatus.OK).body(productList);

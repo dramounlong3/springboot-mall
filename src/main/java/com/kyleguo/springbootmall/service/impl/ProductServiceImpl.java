@@ -1,5 +1,6 @@
 package com.kyleguo.springbootmall.service.impl;
 
+import com.kyleguo.springbootmall.constant.ProductCategory;
 import com.kyleguo.springbootmall.dao.ProductDao;
 import com.kyleguo.springbootmall.dto.ProductRequest;
 import com.kyleguo.springbootmall.model.Product;
@@ -16,8 +17,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.getProducts();
+    public List<Product> getProducts(ProductCategory category, String search) {
+        return productDao.getProducts(category, search);
     }
     @Override
     public Product getProductById(Integer productId) {

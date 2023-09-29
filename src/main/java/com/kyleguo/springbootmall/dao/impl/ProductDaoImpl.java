@@ -1,7 +1,7 @@
 package com.kyleguo.springbootmall.dao.impl;
 
-import com.kyleguo.springbootmall.constant.ProductCategory;
 import com.kyleguo.springbootmall.dao.ProductDao;
+import com.kyleguo.springbootmall.dto.ProductQueryParams;
 import com.kyleguo.springbootmall.dto.ProductRequest;
 import com.kyleguo.springbootmall.model.Product;
 import com.kyleguo.springbootmall.rowmapper.ProductRowMapper;
@@ -21,7 +21,7 @@ public class ProductDaoImpl implements ProductDao {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts(ProductCategory category, String search) {
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
                  "created_date, last_modified_date " +
                  "FROM product " +
@@ -29,19 +29,17 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String,Object> map = new HashMap<>();
 
-        if(category != null) {
+        if(productQueryParams.getCategory() != null) {
            //補上空白 跟上面的WHERE 條件隔開
            sql += " AND category = :category";
-           map.put("category", category.name());
+           map.put("category", productQueryParams.getCategory().name());
         }
 
-        if(search != null) {
+        if(productQueryParams.getSearch() != null) {
             //LIKE的百分比只能加在map, 並且需要用+號隔開接字串, 此為springboot的限制
             sql += " AND product_name LIKE :search";
-            map.put("search", "%" + search + "%");
+            map.put("search", "%" + productQueryParams.getSearch() + "%");
         }
-
-
 
        //List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 

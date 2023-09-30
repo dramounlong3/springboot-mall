@@ -26,15 +26,19 @@ public class ProductDaoImpl implements ProductDao {
         Map<String, Object> map = new HashMap<>();
 
         // 查詢條件
-        if(productQueryParams.getCategory() != null) {
-            sql += " AND category = :category";
-            map.put("category", productQueryParams.getCategory().name());
-        }
+//        if(productQueryParams.getCategory() != null) {
+//            sql += " AND category = :category";
+//            map.put("category", productQueryParams.getCategory().name());
+//        }
+//
+//        if(productQueryParams.getSearch() != null) {
+//            sql += " AND product_name LIKE :search";
+//            map.put("search", "%" + productQueryParams.getSearch() + "%");
+//        }
 
-        if(productQueryParams.getSearch() != null) {
-            sql += " AND product_name LIKE :search";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");
-        }
+        //將上述註解的段落改以方法執行
+        sql = addFilteringSql(sql, map, productQueryParams);
+
 
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
 
@@ -52,17 +56,20 @@ public class ProductDaoImpl implements ProductDao {
         Map<String,Object> map = new HashMap<>();
 
         // 查詢條件
-        if(productQueryParams.getCategory() != null) {
-           //補上空白 跟上面的WHERE 條件隔開
-           sql += " AND category = :category";
-           map.put("category", productQueryParams.getCategory().name());
-        }
+//        if(productQueryParams.getCategory() != null) {
+//           //補上空白 跟上面的WHERE 條件隔開
+//           sql += " AND category = :category";
+//           map.put("category", productQueryParams.getCategory().name());
+//        }
+//
+//        if(productQueryParams.getSearch() != null) {
+//            //LIKE的百分比只能加在map, 並且需要用+號隔開接字串, 此為springboot的限制
+//            sql += " AND product_name LIKE :search";
+//            map.put("search", "%" + productQueryParams.getSearch() + "%");
+//        }
 
-        if(productQueryParams.getSearch() != null) {
-            //LIKE的百分比只能加在map, 並且需要用+號隔開接字串, 此為springboot的限制
-            sql += " AND product_name LIKE :search";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");
-        }
+        //將上述註解的段落改以方法執行
+        sql = addFilteringSql(sql, map, productQueryParams);
 
         // 因為spring boot的限制, order by只能用字串拼接的方式執行, 無法用 :...
         // 預設要提供最新的商品給客戶看, 所以不用增基判斷語句
@@ -159,5 +166,21 @@ public class ProductDaoImpl implements ProductDao {
         map.put("product_id", productId);
 
         namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    // 查詢條件拼接SQL語句
+    // 方法只有在這個class被用到, 優先使用private, 若設為public, 則必須確認其他class是否有使用到此方法
+    private String addFilteringSql(String sql, Map<String, Object> map, ProductQueryParams productQueryParams) {
+        if(productQueryParams.getCategory() != null) {
+            sql += " AND category = :category";
+            map.put("category", productQueryParams.getCategory().name());
+        }
+
+        if(productQueryParams.getSearch() != null) {
+            sql += " AND product_name LIKE :search";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");
+        }
+
+        return sql;
     }
 }

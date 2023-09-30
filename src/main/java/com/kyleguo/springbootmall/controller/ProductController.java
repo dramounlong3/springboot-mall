@@ -20,12 +20,20 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public  ResponseEntity<List<Product>> getProducts(@RequestParam(required = false) ProductCategory category,
-                                                      @RequestParam(required = false) String search) {
+    public  ResponseEntity<List<Product>> getProducts(
+            // 查詢條件 Filtering
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search,
+            // 排序 sorting
+            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "desc") String sort) {
+
         // 改善傳遞參數, 統一用定義好的Object傳遞, 以後就無需一直增加方法的參數
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
+        productQueryParams.setOrderBy(orderBy);
+        productQueryParams.setSort(sort);
 
         List<Product> productList = productService.getProducts(productQueryParams);
 

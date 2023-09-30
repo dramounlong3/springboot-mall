@@ -41,6 +41,10 @@ public class ProductDaoImpl implements ProductDao {
             map.put("search", "%" + productQueryParams.getSearch() + "%");
         }
 
+        // 因為spring boot的限制, order by只能用字串拼接的方式執行, 無法用 :...
+        // 預設要提供最新的商品給客戶看, 所以不用增基判斷語句
+        sql += " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
+
        //List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
         //合併上一段程式碼, 省掉宣告

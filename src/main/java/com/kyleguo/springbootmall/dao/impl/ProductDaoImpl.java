@@ -29,6 +29,7 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String,Object> map = new HashMap<>();
 
+        // 查詢條件
         if(productQueryParams.getCategory() != null) {
            //補上空白 跟上面的WHERE 條件隔開
            sql += " AND category = :category";
@@ -43,7 +44,13 @@ public class ProductDaoImpl implements ProductDao {
 
         // 因為spring boot的限制, order by只能用字串拼接的方式執行, 無法用 :...
         // 預設要提供最新的商品給客戶看, 所以不用增基判斷語句
+        // 排序
         sql += " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
+
+        // 分頁
+        sql += " LIMIT :limit OFFSET :offset";
+        map.put("limit",productQueryParams.getLimit());
+        map.put("offset",productQueryParams.getOffset());
 
        //List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 

@@ -4,6 +4,7 @@ import com.kyleguo.springbootmall.dao.OrderDao;
 import com.kyleguo.springbootmall.dao.ProductDao;
 import com.kyleguo.springbootmall.dto.BuyItem;
 import com.kyleguo.springbootmall.dto.CreateOrderRequest;
+import com.kyleguo.springbootmall.model.Order;
 import com.kyleguo.springbootmall.model.OrderItem;
 import com.kyleguo.springbootmall.model.Product;
 import com.kyleguo.springbootmall.service.OrderService;
@@ -21,6 +22,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+
+        //主檔
+        Order order = orderDao.getOrderById(orderId);
+
+        //明細檔
+        List<OrderItem> orderItemList = orderDao.getOrderItemsByOrderId(orderId);
+
+        // 將主檔內新增一個含明細檔的變數, 並設定到主檔, 一起回傳主明細檔給前端
+        order.setOrderItemList(orderItemList);
+
+        return order;
+    }
 
     @Override
     @Transactional //因為table: order和order_item 兩張table的變更需同時成功或失敗
